@@ -44,8 +44,9 @@ function mostrarPokemon(poke) {
                 <p class="stat">${poke.height}m</p>
                 <p class="stat">${poke.weight}kg</p>
                 <p class="stat">${game_indices}kg</p>
-                
             </div>
+            <div class="pokemon-region">
+        </div>
         </div>
     `;
     listaPokemon.append(div);
