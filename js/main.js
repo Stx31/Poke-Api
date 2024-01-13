@@ -1,25 +1,29 @@
 const listaPokemon = document.querySelector("#listaPokemon");
-const botonesHeader = document.querySelectorAll(".btn-header");
+const botonVerTodos = document.getElementById("ver-todos");
+const filtroPokemonDiv = document.getElementById("filtroPokemon");
+const botonCancelar = document.getElementById("cancelar");
+const inputPokemon = document.getElementById("filtro-input");
 let URL = "https://pokeapi.co/api/v2/pokemon/";
 
-for (let i = 1; i <= 151; i++) {
-    fetch(URL + i)
-        .then((response) => response.json())
-        .then(data => mostrarPokemon(data))
+document.addEventListener("DOMContentLoaded", () => {
+    botonCancelar.style.display = "none";
+    cargarPokemon();
+});
+
+function cargarPokemon() {
+    for (let i = 1; i <= 1008; i++) {
+        fetch(URL + i)
+            .then((response) => response.json())
+            .then(data => mostrarPokemon(data))
+            .catch(error => console.error("Error al cargar Pokémon:", error));
+    }
 }
 
 function mostrarPokemon(poke) {
-
     let tipos = poke.types.map((type) => `<p class="${type.type.name} tipo">${type.type.name}</p>`);
     tipos = tipos.join('');
 
-    let pokeId = poke.id.toString();
-    if (pokeId.length === 1) {
-        pokeId = "00" + pokeId;
-    } else if (pokeId.length === 2) {
-        pokeId = "0" + pokeId;
-    }
-
+    let pokeId = poke.id.toString().padStart(3, '0');
 
     const div = document.createElement("div");
     div.classList.add("pokemon");
@@ -39,31 +43,43 @@ function mostrarPokemon(poke) {
             <div class="pokemon-stats">
                 <p class="stat">${poke.height}m</p>
                 <p class="stat">${poke.weight}kg</p>
+                <p class="stat">${game_indices}kg</p>
+                
             </div>
         </div>
     `;
     listaPokemon.append(div);
 }
 
-botonesHeader.forEach(boton => boton.addEventListener("click", (event) => {
-    const botonId = event.currentTarget.id;
+botonVerTodos.addEventListener("click", () => {
+    listaPokemon.innerHTML = ""; 
+    filtroPokemonDiv.style.display = "block";
+    botonCancelar.style.display = "inline-block";
+});
 
-    listaPokemon.innerHTML = "";
+botonCancelar.addEventListener("click", () => {
+    filtroPokemonDiv.style.display = "none";
+    listaPokemon.innerHTML = ""; 
+    botonCancelar.style.display = "none";
+    inputPokemon.value = "";
+});
 
-    for (let i = 1; i <= 151; i++) {
-        fetch(URL + i)
-            .then((response) => response.json())
-            .then(data => {
-
-                if(botonId === "ver-todos") {
-                    mostrarPokemon(data);
-                } else {
-                    const tipos = data.types.map(type => type.type.name);
-                    if (tipos.some(tipo => tipo.includes(botonId))) {
-                        mostrarPokemon(data);
-                    }
-                }
-
-            })
+inputPokemon.addEventListener("input", () => {
+    const filtro = inputPokemon.value.trim().toLowerCase();
+    if (filtro.length === 0) {
+        listaPokemon.innerHTML = "";
+        cargarPokemon();
+    } else {
+        filtrarPokemon(filtro);
     }
-}))
+});
+
+function filtrarPokemon(filtro) {
+    fetch(`${URL}${filtro}`)
+        .then((response) => response.json())
+        .then(data => {
+            listaPokemon.innerHTML = "";
+            mostrarPokemon(data);
+        })
+        .catch(error => console.error("Pokémon no encontrado:", error));
+}
