@@ -1,34 +1,74 @@
-const URL = 'https://pokeapi.co/api/v2/pokemon/';
-        const searchInput = document.getElementById('search');
-        const pokedexContainer = document.getElementById('pokedex');
+const listaPokemon = document.querySelector("#listaPokemon");
+const botonesHeader = document.querySelectorAll(".btn-header");
+let URL = "https://pokeapi.co/api/v2/pokemon/";
 
-        function showError(message) {
-            pokedexContainer.innerHTML = `<p class="error">${message}</p>`;
-        }
+async function fetchAndDisplayPokemon(url, tipo, version) {
+    try {
+        const response = await fetch(url);
+        const data = await response.json();
 
-        async function searchPokemon() {
-            const searchedPokemon = searchInput.value.toLowerCase();
-
-            try {
-                const response = await fetch(URL + searchedPokemon);
-                if (!response.ok) {
-                    showError(`No se encontró ningún Pokémon llamado "${searchedPokemon}"`);
-                    return;
+        if (data.types && data.game_indices) {
+            if (tipo === "ver-todos" || data.types.some(type => type.type.name === tipo)) {
+                if (!version || (version && Array.isArray(data.game_indices) && data.game_indices.some(game => game.version.name.toLowerCase() === version))) {
+                    const region = await obtenerRegion(data.game_indices);
+                    mostrarPokemon(data, region);
                 }
-
-                const data = await response.json();
-                pokedexContainer.innerHTML = 
-                    `
-                        <h2>${data.name.toUpperCase()}</h2>
-                        <img src="${data.sprites.front_default}" alt="${data.name}">
-                        <p>Número: ${data.id}</p>
-                        <p>Altura: ${data.height / 10}m</p>
-                        <p>Peso: ${data.weight / 10}kg</p>
-                    `;
-            } catch (error) {
-                showError('Ha ocurrido un error al buscar el Pokémon');
-                console.error(error);
             }
         }
+    } catch (error) {
+        console.error('Error fetching Pokémon:', error);
+    }
+}
 
-        document.querySelector('button').addEventListener('click', searchPokemon);
+async function obtenerRegion(gameIndices) {
+    const versionUrl = gameIndices[0].version.url;
+    const response = await fetch(versionUrl);
+    const versionData = await response.json();
+    return versionData.main_region.name;
+}
+
+function mostrarPokemon(poke, region) {
+    let tipos = poke.types.map((type) => `<p class="${type.type.name} tipo">${type.type.name}</p>`).join('');
+
+    let pokeId = poke.id.toString().padStart(3, '0');
+
+    const div = document.createElement("div");
+    div.classList.add("pokemon");
+
+    div.innerHTML = `
+        <p class="pokemon-id-back">#${pokeId}</p>
+        <div class="pokemon-imagen">
+            <img src="${poke.sprites.other['official-artwork'].front_default}" alt="${poke.name}">
+        </div>
+        <div class="pokemon-info">
+            <div class="nombre-contenedor">
+                <p class="pokemon-id">#${pokeId}</p>
+                <h2 class="pokemon-nombre">${poke.name}</h2>
+            </div>
+            <div class="pokemon-tipos">
+                Tipos: ${tipos}
+            </div>
+            <div class="pokemon-region">
+                Región: ${region}
+            </div>
+            <div class="pokemon-stats">
+                <p class="stat">${poke.height / 10}m</p>
+                <p class="stat">${poke.weight / 10}kg</p>
+            </div>
+        </div>
+    `;
+    listaPokemon.append(div);
+}
+
+botonesHeader.forEach(boton => boton.addEventListener("click", (event) => {
+    const tipo = event.currentTarget.dataset.type;
+    const version = event.currentTarget.dataset.version;
+
+    listaPokemon.innerHTML = "";
+
+    (async () => {
+        for (let i = 1; i <= 300; i++) {
+            await fetchAndDisplayPokemon(URL + i, tipo, version);
+        }
+    })();
+}));
