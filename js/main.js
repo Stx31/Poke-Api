@@ -1,8 +1,7 @@
 const listaPokemon = document.querySelector("#listaPokemon");
 const botonesHeader = document.querySelectorAll(".btn-header");
 let URL = "https://pokeapi.co/api/v2/pokemon/";
-
-for (let i = 1; i <= 400; i++) {
+for (let i = 1; i <= 1000; i++) {
     fetch(URL + i)
         .then((response) => response.json())
         .then(data => mostrarPokemon(data))
@@ -13,7 +12,7 @@ function mostrarPokemon(poke) {
     const tipos = poke.types.map(type => type.type.name).join(', ');
     const version = poke.game_indices[0].version.name;
     const localidad = poke.location_area_encounters;
-    const locationArea = poke.location_area_encounters;
+    const locationArea = localidad.includes("https://pokeapi.co/api/") ? "Not available" : localidad;
 
     const div = document.createElement("div");
     div.classList.add("pokemon");
@@ -32,20 +31,22 @@ function mostrarPokemon(poke) {
             </div>
             <div class="pokemon-version-localidad">
                 <p class="region">Version: ${version}</p>
-                <p class="localidad">Localidad: <a href="${localidad}" target="_blank">Encounters</a></p>
-                <p class="location-area">Location Area: ${locationArea}</p>
+                <p class="localidad">Localidad: ${poke.location_area_encounters}</p>
+            
             </div>
         </div>
     `;
     listaPokemon.append(div);
+    console.log(poke);
 }
+
 
 botonesHeader.forEach(boton => boton.addEventListener("click", (event) => {
     const botonId = event.currentTarget.id;
 
     listaPokemon.innerHTML = "";
 
-    for (let i = 1; i <= 400; i++) {
+    for (let i = 1; i <= 1000; i++) {
         fetch(URL + i)
             .then((response) => response.json())
             .then(data => {
