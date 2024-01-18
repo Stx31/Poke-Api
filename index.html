@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -7,13 +8,14 @@
     <title>Pokédex</title>
     <link rel="stylesheet" href="./css/main.css">
 </head>
+
 <body>
-    
+
     <header>
         <nav class="nav">
             <img src="./img/logo.png" alt="Logo Pokédex">
             <ul class="nav-list">
-                <li class="nav-item"><button class="btn btn-header" id="ver-todos">Ver todos</button></li> 
+                <li class="nav-item"><button class="btn btn-header" id="ver-todos">Ver todos</button></li>
                 <li class="nav-item"><button class="btn btn-header normal" id="normal">Normal</button></li>
                 <li class="nav-item"><button class="btn btn-header fire" id="fire">Fire</button></li>
                 <li class="nav-item"><button class="btn btn-header water" id="water">Water</button></li>
@@ -32,31 +34,34 @@
                 <li class="nav-item"><button class="btn btn-header dragon" id="dragon">Dragon</button></li>
                 <li class="nav-item"><button class="btn btn-header steel" id="steel">Steel</button></li>
                 <li class="nav-item"><button class="btn btn-header fairy" id="fairy">Fairy</button></li>
+            </ul>
+            <ul class="nav-list">
                 <li class="nav-item generacion-btn">
-                    <button class="btn btn-header generacion" id="gen-todos">Todas</button>
+                    <button class="btn btn-header generacion" id="ver-todos-versions">All Versions</button>
                     <ul class="generacion-list">
-                        <li><button class="btn btn-header generacion" id="gen-1">Kanto</button></li>
-                        <li><button class="btn btn-header generacion" id="gen-2">Johto</button></li>
-                        <li><button class="btn btn-header generacion" id="gen-3">Hoenn</button></li>
-                        <li><button class="btn btn-header generacion" id="gen-4">Sinnoh</button></li>
-                        <li><button class="btn btn-header generacion" id="gen-5">Unova</button></li>
-                        <li><button class="btn btn-header generacion" id="gen-6">Kalos</button></li>
-                        <li><button class="btn btn-header generacion" id="gen-7">Alola</button></li>
-                        <li><button class="btn btn-header generacion" id="gen-8">Galar</button></li>
+                        <li><button class="btn btn-header red" id="red">Red/Blue/Yellow</button></li>
+                        <li><button class="btn btn-header pearl" id="pearl">Pearl</button></li>
+                        <li><button class="btn btn-header blue" id="blue">Blue</button></li>
+                        <li><button class="btn btn-header gold" id="gold">Gold/Silver/Crystal</button></li>
+                        <li><button class="btn btn-header ruby" id="ruby">Ruby/Sapphire/Emerald</button></li>
+                        <li><button class="btn btn-header Diamond" id="Diamond">Diamond/Pearl/Platinum</button></li>
+                        <li><button class="btn btn-header Black" id="Black">Black/White</button></li>
+                        <li><button class="btn btn-header X" id="X">X/Y</button></li>
+                        <li><button class="btn btn-header Sun" id="Sun">Sun/Moon</button></li>
+                        <li><button class="btn btn-header Sword" id="Sword">Sword/Shield</button></li>
                     </ul>
                 </li>
             </ul>
         </nav>
     </header>
     <main>
-        
         <div id="todos">
             <div class="pokemon-todos" id="listaPokemon">
+                <!-- Contenido Pokémon  -->
             </div>
         </div>
-
     </main>
-
     <script src="./js/main.js"></script>
 </body>
+
 </html>
