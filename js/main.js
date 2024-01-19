@@ -3,12 +3,20 @@ const botonesHeader = document.querySelectorAll(".btn-header");
 let URL = "https://pokeapi.co/api/v2/pokemon/";
 
 function mostrarPokemon(poke) {
-    const tipos = poke.types.map(type => type.type.name).join(', ');
+    const tipos = poke.types.map(type => type.type.name);
     const version = poke.game_indices[0].version.name;
     const imagenURL = poke.sprites.other["official-artwork"].front_default;
+    const peso = poke.weight;
+    const habilidades = poke.abilities.map(ability => ability.ability.name).join(', ');
 
     const div = document.createElement("div");
     div.classList.add("pokemon");
+
+
+    tipos.forEach(tipo => {
+        div.classList.add(tipo);
+    });
+
     div.innerHTML = `
         <p class="pokemon-id">#${poke.id}</p>
         <div class="pokemon-imagen">
@@ -20,10 +28,16 @@ function mostrarPokemon(poke) {
                 <h2 class="pokemon-nombre">${poke.name}</h2>
             </div>
             <div class="pokemon-tipos">
-                <p class="tipos">${tipos}</p>
+                <p class="tipos">${tipos.join(', ')}</p>
             </div>
             <div class="pokemon-version-localidad">
                 <p class="version">Versión: ${version}</p>
+            </div>
+            <div class="pokemon-peso">
+                <p class="peso">Peso: ${peso} kg</p>
+            </div>
+            <div class="pokemon-habilidades">
+                <p class="habilidades">Habilidades: ${habilidades}</p>
             </div>
         </div>
     `;
