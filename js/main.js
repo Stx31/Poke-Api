@@ -67,3 +67,28 @@ botonesHeader.forEach(boton => boton.addEventListener("click", (event) => {
             .catch(error => console.error('Error fetching Pokémon:', error));
     }
 }));
+
+function filtrarPorPeso(min, max) {
+    listaPokemon.innerHTML = "";
+
+    for (let i = 1; i <= 1000; i++) {
+        fetch(URL + i)
+            .then((response) => response.json())
+            .then(data => {
+                const peso = data.weight;
+
+                if (peso >= min && peso <= max) {
+                    mostrarPokemon(data);
+                }
+            })
+            .catch(error => console.error('Error fetching Pokémon:', error));
+    }
+}
+
+botonesFiltroPeso.forEach(boton => {
+    boton.addEventListener("click", () => {
+        const min = Number(boton.getAttribute("data-min"));
+        const max = Number(boton.getAttribute("data-max"));
+        filtrarPorPeso(min, max);
+    });
+});
