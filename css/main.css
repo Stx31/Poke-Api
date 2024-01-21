@@ -289,3 +289,32 @@ main {
     background-color: var(--type-fairy);
     color: var(--clr-black);
 }
+
+.pokemon-imagen img {
+    width: 100%;
+    max-width: 6rem;
+    transition: transform 0.3s ease-in-out; 
+}
+
+.pokemon-imagen:hover img {
+    transform: scale(1.2); 
+}
+
+.pokemon-tooltip {
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgba(0, 0, 0, 0.8);
+    color: #fff;
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+}
+
+.pokemon-imagen:hover .pokemon-tooltip {
+    opacity: 1;
+    visibility: visible;
+}

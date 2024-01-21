@@ -55,8 +55,10 @@
         </nav>
     </header>
     <main>
-        <button id="filtro-0-100">Peso 0-100 kg</button>
-<button id="filtro-100-200">Peso 100-200 kg</button>
+        <div class="filter-buttons">
+            <button class="filter-button" data-min="0" data-max="100">Peso 0-100 kg</button>
+            <button class="filter-button" data-min="100" data-max="200">Peso 100-200 kg</button>
+        </div>
         <div id="todos">
             <div class="pokemon-todos" id="listaPokemon">
                 <!-- Contenido Pokémon  -->
