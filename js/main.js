@@ -1,96 +1,72 @@
 const listaPokemon = document.querySelector("#listaPokemon");
-const filterButtons = document.querySelectorAll(".filter-button");
-const URL = "https://pokeapi.co/api/v2/pokemon/";
+const botonesHeader = document.querySelectorAll(".btn-header");
+let URL = "https://pokeapi.co/api/v2/pokemon/";
 
-function displayPokemon(poke) {
-    const tipos = poke.types.map(type => type.type.name);
-    const version = poke.game_indices[0].version.name;
-    const imagenURL = poke.sprites.other["official-artwork"].front_default;
-    const peso = poke.weight;
-    const habilidades = poke.abilities.map(ability => ability.ability.name).join(', ');
+for (let i = 1; i <= 1000; i++) {
+    fetch(URL + i)
+        .then((response) => response.json())
+        .then(data => mostrarPokemon(data))
+}
 
-    const breveExplicacion = "este pokemon contiene varias estadisitcas y se suele encontar en ";
+function mostrarPokemon(poke) {
+
+    let tipos = poke.types.map((type) => `<p class="${type.type.name} tipo">${type.type.name}</p>`);
+    tipos = tipos.join('');
+
+    let pokeId = poke.id.toString();
+    if (pokeId.length === 1) {
+        pokeId = "00" + pokeId;
+    } else if (pokeId.length === 2) {
+        pokeId = "0" + pokeId;
+    }
+
 
     const div = document.createElement("div");
     div.classList.add("pokemon");
-
-    tipos.forEach(tipo => {
-        div.classList.add(tipo);
-    });
-
     div.innerHTML = `
-        <p class="pokemon-id">#${poke.id}</p>
+        <p class="pokemon-id-back">#${pokeId}</p>
         <div class="pokemon-imagen">
-            <img src="${imagenURL}" alt="${poke.name}" title="Este Pokémon es el número ${poke.id}. ${breveExplicacion}">
-            <div class="pokemon-tooltip">
-                <p>${breveExplicacion}</p>
-            </div>
+            <img src="${poke.sprites.other["official-artwork"].front_default}" alt="${poke.name}">
+            <img src="${poke.sprites.other["official-artwork"].front_shiny}" alt="${poke.name}">
         </div>
         <div class="pokemon-info">
             <div class="nombre-contenedor">
-                <p class="pokemon-id">#${poke.id}</p>
+                <p class="pokemon-id">#${pokeId}</p>
                 <h2 class="pokemon-nombre">${poke.name}</h2>
             </div>
             <div class="pokemon-tipos">
-                <p class="tipos">${tipos.join(', ')}</p>
+                ${tipos}
             </div>
-            <div class="pokemon-version-localidad">
-                <p class="version">Versión: ${version}</p>
-            </div>
-            <div class="pokemon-peso">
-                <p class="peso">Peso: ${peso} kg</p>
-            </div>
-            <div class="pokemon-habilidades">
-                <p class="habilidades">Habilidades: ${habilidades}</p>
+            <div class="pokemon-stats">
+            <p class="stat">${poke.version}m</p>
+            <p class="stat">${poke.regions}m</p>
+                <p class="stat">${poke.height}m</p>
+                <p class="stat">${poke.weight}kg</p>
             </div>
         </div>
     `;
     listaPokemon.append(div);
 }
 
-function fetchDataAndDisplay(i) {
-    fetch(URL + i)
-        .then((response) => response.json())
-        .then(data => {
-            displayPokemon(data);
-        })
-        .catch(error => console.error('Error al obtener Pokémon:', error));
-}
+botonesHeader.forEach(boton => boton.addEventListener("click", (event) => {
+    const botonId = event.currentTarget.id;
 
-function filterByWeight(min, max) {
     listaPokemon.innerHTML = "";
 
     for (let i = 1; i <= 1000; i++) {
-        fetchDataAndDisplay(i);
+        fetch(URL + i)
+            .then((response) => response.json())
+            .then(data => {
+
+                if(botonId === "ver-todos") {
+                    mostrarPokemon(data);
+                } else {
+                    const tipos = data.types.map(type => type.type.name);
+                    if (tipos.some(tipo => tipo.includes(botonId))) {
+                        mostrarPokemon(data);
+                    }
+                }
+
+            })
     }
-}
-
-filterButtons.forEach(button => {
-    button.addEventListener("click", () => {
-        const min = Number(button.getAttribute("data-min"));
-        const max = Number(button.getAttribute("data-max"));
-        filterByWeight(min, max);
-    });
-});
-
-document.querySelectorAll(".btn-header").forEach(boton => {
-    boton.addEventListener("click", (event) => {
-        const botonId = event.currentTarget.id;
-        listaPokemon.innerHTML = "";
-
-        for (let i = 1; i <= 1000; i++) {
-            fetchDataAndDisplay(i);
-        }
-    });
-});
-
-
-document.querySelectorAll(".pokemon-imagen img").forEach(img => {
-    img.addEventListener("mouseenter", () => {
-        img.style.transform = "scale(1.2)";
-    });
-
-    img.addEventListener("mouseleave", () => {
-        img.style.transform = "scale(1)";
-    });
-});
+}))
